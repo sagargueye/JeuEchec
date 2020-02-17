@@ -17,9 +17,7 @@ public class ControllerLocal implements ChessControllerModel, ChessControllerVie
 		return turnPlayer;
 	}
 	@Override
-	public boolean actionsWhenPieceIsSelectedOnGui(PieceSquareColor pieceSquareColor, GUICoord pieceToMoveCoord) {
-		System.out.println("dans action ");
-		
+	public boolean actionsWhenPieceIsSelectedOnGui(PieceSquareColor pieceSquareColor, GUICoord pieceToMoveCoord) {		
 	    if( pieceSquareColor.equals(PieceSquareColor.WHITE)  && this.getTurnPlayer()==true ) {
 	    	System.out.println("white:cest son tour ");
 	    	this.setTurnPlayer(false);
@@ -29,7 +27,6 @@ public class ControllerLocal implements ChessControllerModel, ChessControllerVie
 	    	this.setTurnPlayer(true);
 	    	return true;
 	    }
-			
 		return false;
 	}
 

@@ -18,7 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import hellodraganddrop.*;
 import shared.GUICoord;
 
 import java.util.List;
@@ -92,7 +91,6 @@ public class Board extends GridPane implements ChessView{
 				square.setOnDragOver(new EventHandler <DragEvent>() {
 			            public void handle(DragEvent event) {
 			                /* data is dragged over the target */
-			                System.out.println("onDragOver");
 			                PieceGui piece = (PieceGui) Board.this.getSelectedPiece();
 			                Board.this.getChessController().actionsWhenPieceIsDraggedOnGui(piece.getCouleur(), new GUICoord((int) piece.getX(),(int) piece.getY()));
 			                /* accept it only if it is  not dragged from the same node 
@@ -160,11 +158,10 @@ public class Board extends GridPane implements ChessView{
 				                System.out.println("onDragDetected");
 				                Board.this.setSelectedPiece((Node) event.getSource());
 				                boolean monSuperBoolean=Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), new GUICoord((int) ((PieceGui) event.getSource()).getX(),(int)((PieceGui) event.getSource()).getY()));
-				                /* allow any transfer mode */
-				                System.out.println("arrrrrrive");
 				                if(monSuperBoolean==false) {
 				                	return;
 				                }
+				                //on arrive ici donc on identie la piece
 				                System.out.println(((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord());
 				                Dragboard db = Board.this.startDragAndDrop(TransferMode.ANY);
 				                PieceGui piece = (PieceGui) event.getSource();
