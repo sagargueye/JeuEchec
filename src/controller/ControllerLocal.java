@@ -1,17 +1,39 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import model.ChessModel;
 import shared.GUICoord;
 import shared.PieceSquareColor;
 import view.ChessView;
+import view.View;
 
 
 public class ControllerLocal implements ChessControllerModel, ChessControllerView {
 
+	View view;
+	List<GUICoord> corrds = new ArrayList<>();
+	
 	@Override
 	public boolean actionsWhenPieceIsSelectedOnGui(PieceSquareColor pieceSquareColor, GUICoord pieceToMoveCoord) {
-		System.out.println("Coucou 1 ");
-			
+		System.out.println("Coucou 1 " + pieceToMoveCoord);
+
+		GUICoord newCoord = null;
+		if(pieceSquareColor.equals(PieceSquareColor.WHITE)) {
+			for(int i =1; i<4; i++) {
+				newCoord = new GUICoord(pieceToMoveCoord.getX(),pieceToMoveCoord.getY()-i);
+				corrds.add(newCoord);
+			}
+		}
+		if(pieceSquareColor.equals(PieceSquareColor.BLACK)) {
+			for(int i =1; i<4; i++) {
+				newCoord = new GUICoord(pieceToMoveCoord.getX(),pieceToMoveCoord.getY()+i);
+				corrds.add(newCoord);
+			}
+		}
+		this.view.setPieceToMoveVisible(pieceToMoveCoord, true);
+		this.view.resetLight(corrds,false);
 		return false;
 	}
 
@@ -21,7 +43,8 @@ public class ControllerLocal implements ChessControllerModel, ChessControllerVie
 			
 		return false;
 	}
-
+	
+	
 	@Override
 	public void actionsWhenPieceIsMovedOnGui(GUICoord targetCoord) {
 		// TODO Auto-generated method stub
@@ -30,13 +53,16 @@ public class ControllerLocal implements ChessControllerModel, ChessControllerVie
 
 	@Override
 	public void actionsWhenPieceIsReleasedOnGui(GUICoord targetCoord) {
-		// TODO Auto-generated method stub
+		System.out.println("LALDZOFDEJFPOIJMFNBFVCPUSEIUFHPUESHGFPUSEHFPIUSHFUESFOUYSGVOUYSBGEOUYESDFSF");
+		this.view.setPieceToMoveVisible(targetCoord, false);
+		this.view.resetLight(corrds,true);
+		corrds = new ArrayList<>();
 
 	}
 
 	@Override
 	public void setView(ChessView chessGUI) {
-		// TODO Auto-generated method stub
+		this.view = (View) chessGUI;
 		
 	}
 
