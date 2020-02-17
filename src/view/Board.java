@@ -35,7 +35,7 @@ import controller.ChessController;
  * 		public final static double height = 600.0;
  * 
  */
-class Board extends GridPane implements ChessView{
+public class Board extends GridPane implements ChessView{
 
 	private final ChessController controller;
 	private Node selectedPieceGui;					// la pi�ce � d�placer
@@ -68,6 +68,7 @@ class Board extends GridPane implements ChessView{
 
 		SquareGui square = null;
 		PieceGui piece = null;
+		
 		shared.PieceSquareColor squareColor = null;
 		for (int ligne = 0; ligne < this.nbLig; ligne++) {
 
@@ -158,8 +159,12 @@ class Board extends GridPane implements ChessView{
 				                /* drag was detected, start drag-and-drop gesture*/
 				                System.out.println("onDragDetected");
 				                Board.this.setSelectedPiece((Node) event.getSource());
-				                Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), new GUICoord((int) ((PieceGui) event.getSource()).getX(),(int)((PieceGui) event.getSource()).getY()));
+				                boolean monSuperBoolean=Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), new GUICoord((int) ((PieceGui) event.getSource()).getX(),(int)((PieceGui) event.getSource()).getY()));
 				                /* allow any transfer mode */
+				                System.out.println("arrrrrrive");
+				                if(monSuperBoolean==false) {
+				                	return;
+				                }
 				                System.out.println(((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord());
 				                Dragboard db = Board.this.startDragAndDrop(TransferMode.ANY);
 				                PieceGui piece = (PieceGui) event.getSource();
