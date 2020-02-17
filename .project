@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
+	<name>echec1</name>
+=======
 	<name>JeuEchec</name>
+>>>>>>> 05cb8c527e72de6da1c07fe602accc28d682bf3a
 	<comment></comment>
 	<projects>
 	</projects>

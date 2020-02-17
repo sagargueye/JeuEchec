@@ -129,6 +129,7 @@ public class Board extends GridPane implements ChessView{
 			        			((SquareGui) event.getSource()).setCenter(Board.this.getSelectedPiece());
 			        			success = true;
 			                }
+			                Board.this.getChessController().actionsWhenPieceIsReleasedOnGui(((SquareGui)event.getSource()).getCoord());
 			                event.setDropCompleted(success);
 
 			                
@@ -156,8 +157,11 @@ public class Board extends GridPane implements ChessView{
 				            public void handle(MouseEvent event) {
 				                /* drag was detected, start drag-and-drop gesture*/
 				                System.out.println("onDragDetected");
+
 				                Board.this.setSelectedPiece((Node) event.getSource());
-				                boolean monSuperBoolean=Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), new GUICoord((int) ((PieceGui) event.getSource()).getX(),(int)((PieceGui) event.getSource()).getY()));
+				                boolean monSuperBoolean=Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), (((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord()));
+				                /* allow any transfer mode */
+				                System.out.println("arrrrrrive");
 				                if(monSuperBoolean==false) {
 				                	return;
 				                }
@@ -250,8 +254,16 @@ public class Board extends GridPane implements ChessView{
 
 	@Override
 	public void setPieceToMoveVisible(GUICoord gUICoord, boolean visible) {
-		// TODO Auto-generated method stub
-		
+		List<Node> squares = this.getChildren();
+		System.out.println("Coucouc c'est moi le roi de la visible 1er partie");
+		for (Node node : squares) {
+			System.out.println("Coucouc c'est moi le roi de la visible 2em partie");
+			if(((SquareGui) node).getCoord().equals(gUICoord)) {
+				System.out.println("Coucouc c'est moi le roi de la visible");
+				((SquareGui) node).getChildren().get(0).setVisible(!visible);
+				
+			}
+		}	
 	}
 
 
@@ -286,7 +298,16 @@ public class Board extends GridPane implements ChessView{
 	@Override
 	public void resetLight(List<GUICoord> gUICoords, boolean isLight) {
 		// TODO Auto-generated method stub
-		
+		List<Node> squares = this.getChildren();
+		for (Node node : squares) {
+			for (GUICoord coord : gUICoords) {
+				System.out.println("Coucouc a tous : "+coord+"   -     "+((SquareGui) node).getCoord()+" ");
+				if(((SquareGui) node).getCoord().equals(coord)) {
+					System.out.println("Coucouc c'est moi le roi");
+					((SquareGui) node).resetColor(isLight);
+				}
+			}	
+		}
 	}
 
 

@@ -1,40 +1,72 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import model.ChessModel;
 import shared.GUICoord;
 import shared.PieceSquareColor;
 import view.Board;
 import view.ChessView;
-import view.PieceGui;
+import view.View;
 
 
 public class ControllerLocal implements ChessControllerModel, ChessControllerView {
+
+	View view;
+	List<GUICoord> corrds = new ArrayList<>();
 	boolean turnPlayer = true;
-	public void setTurnPlayer( boolean val) {
-		turnPlayer= val;
-	}
-	public boolean getTurnPlayer() {
-		return turnPlayer;
-	}
+		
+		
 	@Override
-	public boolean actionsWhenPieceIsSelectedOnGui(PieceSquareColor pieceSquareColor, GUICoord pieceToMoveCoord) {		
+
+	public boolean actionsWhenPieceIsSelectedOnGui(PieceSquareColor pieceSquareColor, GUICoord pieceToMoveCoord) {
+		System.out.println("dans action ");
+		GUICoord newCoord = null;
 	    if( pieceSquareColor.equals(PieceSquareColor.WHITE)  && this.getTurnPlayer()==true ) {
 	    	System.out.println("white:cest son tour ");
+			for(int i =1; i<4; i++) {
+				newCoord = new GUICoord(pieceToMoveCoord.getX(),pieceToMoveCoord.getY()-i);
+				corrds.add(newCoord);
+			}
 	    	this.setTurnPlayer(false);
-	    	return true;
-	    }else if(pieceSquareColor.equals(PieceSquareColor.BLACK)  && this.getTurnPlayer()==false){
-	    	System.out.println("black: cest son tour");
-	    	this.setTurnPlayer(true);
+	    	this.corrds = corrds;
+		    this.view.setPieceToMoveVisible(pieceToMoveCoord, true);
+			this.view.resetLight(corrds,false);
 	    	return true;
 	    }
+	    else if(pieceSquareColor.equals(PieceSquareColor.BLACK)  && this.getTurnPlayer()==false){
+	    	System.out.println("black: cest son tour");
+			for(int i =1; i<4; i++) {
+				newCoord = new GUICoord(pieceToMoveCoord.getX(),pieceToMoveCoord.getY()+i);
+				corrds.add(newCoord);
+			}
+	    	this.setTurnPlayer(true);
+	    	this.corrds = corrds;
+		    this.view.setPieceToMoveVisible(pieceToMoveCoord, true);
+			this.view.resetLight(corrds,false);
+			return true;
+	    }
+
 		return false;
+	}
+
+	private boolean getTurnPlayer() {
+		
+		return this.turnPlayer;
+	}
+
+	private void setTurnPlayer(boolean b) {
+		this.turnPlayer = b;
+		
 	}
 
 	@Override
 	public boolean actionsWhenPieceIsDraggedOnGui(PieceSquareColor pieceSquareColor, GUICoord pieceToMoveCoord) {
 		return false;
 	}
-
+	
+	
 	@Override
 	public void actionsWhenPieceIsMovedOnGui(GUICoord targetCoord) {
 		// TODO Auto-generated method stub
@@ -43,13 +75,16 @@ public class ControllerLocal implements ChessControllerModel, ChessControllerVie
 
 	@Override
 	public void actionsWhenPieceIsReleasedOnGui(GUICoord targetCoord) {
-		// TODO Auto-generated method stub
+		System.out.println("LALDZOFDEJFPOIJMFNBFVCPUSEIUFHPUESHGFPUSEHFPIUSHFUESFOUYSGVOUYSBGEOUYESDFSF");
+		this.view.setPieceToMoveVisible(targetCoord, false);
+		this.view.resetLight(corrds,true);
+		corrds = new ArrayList<>();
 
 	}
 
 	@Override
 	public void setView(ChessView chessGUI) {
-		// TODO Auto-generated method stub
+		this.view = (View) chessGUI;
 		
 	}
 
