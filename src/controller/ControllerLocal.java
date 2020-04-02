@@ -88,7 +88,7 @@ public class ControllerLocal implements ChessControllerModel, ChessControllerVie
 
 	@Override
 	public void actionsWhenPieceIsReleasedOnGui(GUICoord targetCoord, String typePiece) {
-		System.out.flush(); 
+		System.out.flush(); //vide le console
 		System.out.println("==============================");
 		System.out.println("dans encore le controller");
 		System.out.println("dans actionsWhenPieceIsReleasedOnGuiencore le controller");
