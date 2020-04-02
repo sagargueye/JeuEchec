@@ -1,1 +1,7 @@
 /bin
+/bin/controller
+/bin/launcher
+/bin/model
+/bin/shared
+/bin/view
+/bin/les_regles_du_jeu_txt
