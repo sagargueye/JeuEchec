@@ -69,10 +69,12 @@ public class Board extends GridPane implements ChessView{
 		PieceGui piece = null;
 		
 		shared.PieceSquareColor squareColor = null;
+		
+	
 		for (int ligne = 0; ligne < this.nbLig; ligne++) {
 
 			for (int col = 0; col < this.nbCol; col++) {
-				// s�lection de la couleur de la case
+				// selection de la couleur de la case
 				if ((col % 2 == 0 && ligne % 2 == 0) || (col % 2 != 0 && ligne % 2 != 0)) {
 					squareColor = shared.PieceSquareColor.WHITE;
 				} else {
@@ -83,13 +85,14 @@ public class Board extends GridPane implements ChessView{
 				// cr�ation d'un Pane
 				square = (SquareGui) GuiFactory.createSquare(col, ligne);
 				piece = (PieceGui) GuiFactory.createPiece(col, ligne);
-				
+				System.out.println(" debut boucle ===="+ piece);
 				// ajout d'un �couteur sur le carr�
 				//square.setOnMouseClicked(squareListener);
 				
 				
 				square.setOnDragOver(new EventHandler <DragEvent>() {
 			            public void handle(DragEvent event) {
+			            	//System.out.println("dans SetOnDragOver");
 			                /* data is dragged over the target */
 			                PieceGui piece = (PieceGui) Board.this.getSelectedPiece();
 			                Board.this.getChessController().actionsWhenPieceIsDraggedOnGui(piece.getCouleur(), new GUICoord((int) piece.getX(),(int) piece.getY()));
@@ -98,7 +101,6 @@ public class Board extends GridPane implements ChessView{
 			                if (event.getGestureSource() != Board.this.getSelectedPiece().getParent() && event.getDragboard().hasImage()) {
 			                    /* allow for both copying and moving, whatever user chooses */
 			                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-			                    
 			                }
 			                event.consume();
 			            }
@@ -112,6 +114,7 @@ public class Board extends GridPane implements ChessView{
 			                if (event.getGestureSource() != Board.this.getSelectedPiece().getParent() && event.getDragboard().hasImage()) {
 
 			                }
+			                System.out.println("fin onDragEntered");
 			                event.consume();
 			            }
 			        });
@@ -126,12 +129,12 @@ public class Board extends GridPane implements ChessView{
 			                boolean success = false;
 			                if (db.hasImage()) {
 				                System.out.println("ALLALLALALALALAL CADEVRAI MARCHER");
-			        			((SquareGui) event.getSource()).setCenter(Board.this.getSelectedPiece());
-			        			success = true;
+				                Board.this.getChessController().actionsWhenPieceIsReleasedOnGui( ((SquareGui)event.getSource()).getCoord(),  ((PieceGui) Board.this.getSelectedPiece()).getType());
+			                	success = true;
 			                }
-			                Board.this.getChessController().actionsWhenPieceIsReleasedOnGui(((SquareGui)event.getSource()).getCoord());
 			                event.setDropCompleted(success);
-
+			                System.out.println("=======fin de onDragDropped");
+			                System.out.println( ((PieceGui) Board.this.getSelectedPiece()).getType());
 			                
 			                /* let the source know whether the string was successfully 
 			                 * transferred and used */
@@ -161,11 +164,12 @@ public class Board extends GridPane implements ChessView{
 				                Board.this.setSelectedPiece((Node) event.getSource());
 				                boolean monSuperBoolean=Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), (((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord()));
 				                /* allow any transfer mode */
-				                System.out.println("arrrrrrive");
-				                if(monSuperBoolean==false) {
+				                System.out.println("le retour de actionwhen....."+monSuperBoolean);
+				                if(monSuperBoolean==false) {				                	
 				                	return;
 				                }
 				                //on arrive ici donc on identie la piece
+				                
 				                System.out.println(((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord());
 				                Dragboard db = Board.this.startDragAndDrop(TransferMode.ANY);
 				                PieceGui piece = (PieceGui) event.getSource();
@@ -211,6 +215,9 @@ public class Board extends GridPane implements ChessView{
 	}
 
 
+
+
+
 	/**	private Node getSelectedPiece() {
 		return this.selectedPieceGui;
 	}
@@ -254,14 +261,14 @@ public class Board extends GridPane implements ChessView{
 
 	@Override
 	public void setPieceToMoveVisible(GUICoord gUICoord, boolean visible) {
+		System.out.println("dans setPieceToMoveVisible ");
+		System.out.println(gUICoord);
+
 		List<Node> squares = this.getChildren();
-		System.out.println("Coucouc c'est moi le roi de la visible 1er partie");
 		for (Node node : squares) {
-			System.out.println("Coucouc c'est moi le roi de la visible 2em partie");
 			if(((SquareGui) node).getCoord().equals(gUICoord)) {
-				System.out.println("Coucouc c'est moi le roi de la visible");
+				System.out.println(((SquareGui) node));
 				((SquareGui) node).getChildren().get(0).setVisible(!visible);
-				
 			}
 		}	
 	}
@@ -269,14 +276,27 @@ public class Board extends GridPane implements ChessView{
 
 	@Override
 	public void movePiece(GUICoord initCoord, GUICoord targetCoord) {
-		// TODO Auto-generated method stub
-		
+		List<Node> squares = this.getChildren();
+		System.out.println("dans move piece");
+		for (Node node : squares) {
+			if(((SquareGui) node).getCoord().equals(targetCoord)) {		
+				System.out.println("dans le if du move piece");
+				((SquareGui) node).setCenter(Board.this.getSelectedPiece());
+			}
+		}	
 	}
 
 
 	@Override
 	public void undoMovePiece(GUICoord pieceToMoveInitCoord) {
-		// TODO Auto-generated method stub
+		List<Node> squares = this.getChildren();
+		System.out.println("dans unmove piece");
+		for (Node node : squares) {
+			System.out.println("dans le if du unmove piece");
+			if(((SquareGui) node).getCoord().equals(pieceToMoveInitCoord)) {		
+				((SquareGui) node).setCenter(Board.this.getSelectedPiece());
+			}
+		}	
 		
 	}
 
@@ -301,18 +321,13 @@ public class Board extends GridPane implements ChessView{
 		List<Node> squares = this.getChildren();
 		for (Node node : squares) {
 			for (GUICoord coord : gUICoords) {
-				System.out.println("Coucouc a tous : "+coord+"   -     "+((SquareGui) node).getCoord()+" ");
 				if(((SquareGui) node).getCoord().equals(coord)) {
-					System.out.println("Coucouc c'est moi le roi");
 					((SquareGui) node).resetColor(isLight);
 				}
 			}	
 		}
 	}
 
-
-
-	
 
 
 }

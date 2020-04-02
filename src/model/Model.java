@@ -14,7 +14,7 @@ public class Model implements ChessModel {
 	}
 
 	@Override
-	public ActionType move(ModelCoord initCoord, ModelCoord finalCoord) {
+	public ActionType doMove(ModelCoord initCoord, ModelCoord finalCoord) {
 		// TODO Auto-generated method stub
 		return null;
 	}

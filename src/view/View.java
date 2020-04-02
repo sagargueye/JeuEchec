@@ -50,32 +50,28 @@ public class View extends GridPane implements ChessView {
 
 	@Override
 	public void resetLight(List<GUICoord> gUICoords, boolean isLight) {
-
 		this.board.resetLight(gUICoords, isLight);
 	}
 
 	@Override
 	public void movePiece(GUICoord initCoord, GUICoord targetCoord) {
-		// TODO Auto-generated method stub
+		this.board.movePiece(initCoord, targetCoord);
 		
 	}
 
 	@Override
 	public void undoMovePiece(GUICoord pieceToMoveInitCoord) {
-		// TODO Auto-generated method stub
-		
+		this.board.undoMovePiece(pieceToMoveInitCoord);
 	}
 
 	@Override
 	public String getPromotionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.board.getPromotionType();
 	}
 
 	@Override
 	public void promotePiece(GUICoord gUICoord, String promotionType) {
-		// TODO Auto-generated method stub
-		
+		this.board.promotePiece( gUICoord,  promotionType);		
 	}
 
 }
