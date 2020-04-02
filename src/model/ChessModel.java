@@ -30,7 +30,7 @@ public interface ChessModel {
 	 * @param finalCoord
 	 * @return le type de déplacement (avec ou sans prise, etc.) 
 	 */
-	ActionType move(ModelCoord initCoord, ModelCoord finalCoord);
+	ActionType doMove(ModelCoord initCoord, ModelCoord finalCoord);
 	
 	/** 
 	 * @param promotionCoord

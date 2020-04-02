@@ -18,7 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import hellodraganddrop.*;
 import shared.GUICoord;
 
 import java.util.List;
@@ -35,7 +34,7 @@ import controller.ChessController;
  * 		public final static double height = 600.0;
  * 
  */
-class Board extends GridPane implements ChessView{
+public class Board extends GridPane implements ChessView{
 
 	private final ChessController controller;
 	private Node selectedPieceGui;					// la pi�ce � d�placer
@@ -68,11 +67,14 @@ class Board extends GridPane implements ChessView{
 
 		SquareGui square = null;
 		PieceGui piece = null;
+		
 		shared.PieceSquareColor squareColor = null;
+		
+	
 		for (int ligne = 0; ligne < this.nbLig; ligne++) {
 
 			for (int col = 0; col < this.nbCol; col++) {
-				// s�lection de la couleur de la case
+				// selection de la couleur de la case
 				if ((col % 2 == 0 && ligne % 2 == 0) || (col % 2 != 0 && ligne % 2 != 0)) {
 					squareColor = shared.PieceSquareColor.WHITE;
 				} else {
@@ -83,15 +85,15 @@ class Board extends GridPane implements ChessView{
 				// cr�ation d'un Pane
 				square = (SquareGui) GuiFactory.createSquare(col, ligne);
 				piece = (PieceGui) GuiFactory.createPiece(col, ligne);
-				
+				System.out.println(" debut boucle ===="+ piece);
 				// ajout d'un �couteur sur le carr�
 				//square.setOnMouseClicked(squareListener);
 				
 				
 				square.setOnDragOver(new EventHandler <DragEvent>() {
 			            public void handle(DragEvent event) {
+			            	//System.out.println("dans SetOnDragOver");
 			                /* data is dragged over the target */
-			                System.out.println("onDragOver");
 			                PieceGui piece = (PieceGui) Board.this.getSelectedPiece();
 			                Board.this.getChessController().actionsWhenPieceIsDraggedOnGui(piece.getCouleur(), new GUICoord((int) piece.getX(),(int) piece.getY()));
 			                /* accept it only if it is  not dragged from the same node 
@@ -99,7 +101,6 @@ class Board extends GridPane implements ChessView{
 			                if (event.getGestureSource() != Board.this.getSelectedPiece().getParent() && event.getDragboard().hasImage()) {
 			                    /* allow for both copying and moving, whatever user chooses */
 			                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-			                    
 			                }
 			                event.consume();
 			            }
@@ -113,6 +114,7 @@ class Board extends GridPane implements ChessView{
 			                if (event.getGestureSource() != Board.this.getSelectedPiece().getParent() && event.getDragboard().hasImage()) {
 
 			                }
+			                System.out.println("fin onDragEntered");
 			                event.consume();
 			            }
 			        });
@@ -127,11 +129,12 @@ class Board extends GridPane implements ChessView{
 			                boolean success = false;
 			                if (db.hasImage()) {
 				                System.out.println("ALLALLALALALALAL CADEVRAI MARCHER");
-			        			((SquareGui) event.getSource()).setCenter(Board.this.getSelectedPiece());
-			        			success = true;
+				                Board.this.getChessController().actionsWhenPieceIsReleasedOnGui( ((SquareGui)event.getSource()).getCoord(),  ((PieceGui) Board.this.getSelectedPiece()).getType());
+			                	success = true;
 			                }
 			                event.setDropCompleted(success);
-
+			                System.out.println("=======fin de onDragDropped");
+			                System.out.println( ((PieceGui) Board.this.getSelectedPiece()).getType());
 			                
 			                /* let the source know whether the string was successfully 
 			                 * transferred and used */
@@ -157,9 +160,16 @@ class Board extends GridPane implements ChessView{
 				            public void handle(MouseEvent event) {
 				                /* drag was detected, start drag-and-drop gesture*/
 				                System.out.println("onDragDetected");
+
 				                Board.this.setSelectedPiece((Node) event.getSource());
-				                Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), new GUICoord((int) ((PieceGui) event.getSource()).getX(),(int)((PieceGui) event.getSource()).getY()));
+				                boolean monSuperBoolean=Board.this.getChessController().actionsWhenPieceIsSelectedOnGui(((PieceGui) event.getSource()).getCouleur(), (((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord()));
 				                /* allow any transfer mode */
+				                System.out.println("le retour de actionwhen....."+monSuperBoolean);
+				                if(monSuperBoolean==false) {				                	
+				                	return;
+				                }
+				                //on arrive ici donc on identie la piece
+				                
 				                System.out.println(((SquareGui)((PieceGui) event.getSource()).getParent()).getCoord());
 				                Dragboard db = Board.this.startDragAndDrop(TransferMode.ANY);
 				                PieceGui piece = (PieceGui) event.getSource();
@@ -205,6 +215,9 @@ class Board extends GridPane implements ChessView{
 	}
 
 
+
+
+
 	/**	private Node getSelectedPiece() {
 		return this.selectedPieceGui;
 	}
@@ -248,21 +261,42 @@ class Board extends GridPane implements ChessView{
 
 	@Override
 	public void setPieceToMoveVisible(GUICoord gUICoord, boolean visible) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("dans setPieceToMoveVisible ");
+		System.out.println(gUICoord);
+
+		List<Node> squares = this.getChildren();
+		for (Node node : squares) {
+			if(((SquareGui) node).getCoord().equals(gUICoord)) {
+				System.out.println(((SquareGui) node));
+				((SquareGui) node).getChildren().get(0).setVisible(!visible);
+			}
+		}	
 	}
 
 
 	@Override
 	public void movePiece(GUICoord initCoord, GUICoord targetCoord) {
-		// TODO Auto-generated method stub
-		
+		List<Node> squares = this.getChildren();
+		System.out.println("dans move piece");
+		for (Node node : squares) {
+			if(((SquareGui) node).getCoord().equals(targetCoord)) {		
+				System.out.println("dans le if du move piece");
+				((SquareGui) node).setCenter(Board.this.getSelectedPiece());
+			}
+		}	
 	}
 
 
 	@Override
 	public void undoMovePiece(GUICoord pieceToMoveInitCoord) {
-		// TODO Auto-generated method stub
+		List<Node> squares = this.getChildren();
+		System.out.println("dans unmove piece");
+		for (Node node : squares) {
+			System.out.println("dans le if du unmove piece");
+			if(((SquareGui) node).getCoord().equals(pieceToMoveInitCoord)) {		
+				((SquareGui) node).setCenter(Board.this.getSelectedPiece());
+			}
+		}	
 		
 	}
 
@@ -284,12 +318,16 @@ class Board extends GridPane implements ChessView{
 	@Override
 	public void resetLight(List<GUICoord> gUICoords, boolean isLight) {
 		// TODO Auto-generated method stub
-		
+		List<Node> squares = this.getChildren();
+		for (Node node : squares) {
+			for (GUICoord coord : gUICoords) {
+				if(((SquareGui) node).getCoord().equals(coord)) {
+					((SquareGui) node).resetColor(isLight);
+				}
+			}	
+		}
 	}
 
-
-
-	
 
 
 }

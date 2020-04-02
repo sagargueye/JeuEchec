@@ -93,7 +93,7 @@ public class PieceGUIFactory {
 				image = createImage(pieceType);		
 				
 				// création pièce
-				chessPieceGUI = new PieceGui( pieceSquareColor,  image );
+				chessPieceGUI = new PieceGui( pieceSquareColor,  image,  pieceType);
 			}
 		}
 		
@@ -133,6 +133,6 @@ public class PieceGUIFactory {
 		}
 		return couleurPiece;
 	}
-	
+
 
 }

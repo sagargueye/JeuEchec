@@ -18,6 +18,8 @@ import shared.GUICoord;
 
 public class View extends GridPane implements ChessView {
 
+	Board board;
+	
 	public View(ChessController chessController) {
 		// TODO Auto-generated constructor stub
 		super();
@@ -25,7 +27,7 @@ public class View extends GridPane implements ChessView {
 		// le damier composé de carrés noirs et blancs
 		// sur lesquels sont positionnés des pièces noires ou blanches
 		Pane board = new Board(chessController);
-
+			this.board = (Board) board;
 		// gestion de la taille du damier
 		double height = 800.0;			// TODO - à  remplacer (atelier 4) : bad practice
 		board.setPrefSize( height, height);			// TODO - à  remplacer (atelier 4) : bad practice
@@ -42,38 +44,34 @@ public class View extends GridPane implements ChessView {
 
 	@Override
 	public void setPieceToMoveVisible(GUICoord gUICoord, boolean visible) {
-		// TODO Auto-generated method stub
+		this.board.setPieceToMoveVisible(gUICoord, visible);
 		
 	}
 
 	@Override
 	public void resetLight(List<GUICoord> gUICoords, boolean isLight) {
-		// TODO Auto-generated method stub
-		
+		this.board.resetLight(gUICoords, isLight);
 	}
 
 	@Override
 	public void movePiece(GUICoord initCoord, GUICoord targetCoord) {
-		// TODO Auto-generated method stub
+		this.board.movePiece(initCoord, targetCoord);
 		
 	}
 
 	@Override
 	public void undoMovePiece(GUICoord pieceToMoveInitCoord) {
-		// TODO Auto-generated method stub
-		
+		this.board.undoMovePiece(pieceToMoveInitCoord);
 	}
 
 	@Override
 	public String getPromotionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.board.getPromotionType();
 	}
 
 	@Override
 	public void promotePiece(GUICoord gUICoord, String promotionType) {
-		// TODO Auto-generated method stub
-		
+		this.board.promotePiece( gUICoord,  promotionType);		
 	}
 
 }

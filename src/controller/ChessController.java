@@ -64,8 +64,9 @@ public interface ChessController {
 	 * 
 	 * Cette méthode est appelé lorsque la pièce a atteint sa destination dans une view 
 	 * (MouseReleased sur ChessSquareGui).
+	 * @param string 
 	 */
-	public void actionsWhenPieceIsReleasedOnGui(GUICoord targetCoord) ;
+	public void actionsWhenPieceIsReleasedOnGui(GUICoord targetCoord, String string) ;
 	
 	
 	

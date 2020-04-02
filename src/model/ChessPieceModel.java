@@ -37,7 +37,7 @@ public interface ChessPieceModel {
 	 * @param yFinal
 	 * @return ActionType
 	 */
-	public ActionType doMove(ModelCoord coord);
+	public ActionType doMove(ModelCoord initCoord, ModelCoord finalCoord);
 
 	/** 
 	 * @return true si piece effectivement captur�e

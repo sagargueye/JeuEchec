@@ -12,4 +12,6 @@ import shared.PieceSquareColor;
 public interface ChessPieceGui   {
 
 	public PieceSquareColor getCouleur() ;
+
+	public String getType();
 }

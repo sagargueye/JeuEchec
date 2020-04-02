@@ -48,6 +48,7 @@ public class ModelCoord implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
+		System.out.println("equals param:"+obj);
 		if (this == obj)
 			return true;
 		if (obj == null)
